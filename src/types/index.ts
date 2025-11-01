@@ -7,3 +7,9 @@ export interface ParkingSpot {
   isAvailable: boolean;
   spotNumber: string;
 }
+
+export interface FormDataBooking {
+  customerName: string;
+  vehicleNumber: string;
+  duration: number;
+}
