@@ -31,6 +31,8 @@ const DetailPemesananPage = () => {
     setOpenModalConfirm(true);
   };
 
+  console.log("selectedBookedId", selectedBookedId);
+
   const handleEndParking = () => {
     const updatedBookings = bookings.filter(
       (book) => book.id !== selectedBookedId
@@ -38,11 +40,13 @@ const DetailPemesananPage = () => {
     setBookings(updatedBookings);
     localStorage.setItem("bookings", JSON.stringify(updatedBookings));
 
+    console.log("updatedBookings", updatedBookings);
+
     setOpenModalConfirm(false);
     setSelectedBookedId(null);
   };
 
-  console.log("bookings", bookings);
+  // console.log("bookings", bookings);
 
   return (
     <>
@@ -71,7 +75,7 @@ const DetailPemesananPage = () => {
       </div>
       <ConfirmModal
         isOpen={openModalConfirm}
-        onConfirm={() => selectedBookedId && handleEndParking}
+        onConfirm={handleEndParking}
         onCancel={() => setOpenModalConfirm(false)}
       />
     </>
