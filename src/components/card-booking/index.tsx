@@ -4,10 +4,12 @@ import { CircleAlert, Timer, SquareParking } from "lucide-react";
 
 const CardBooking = ({
   dataBook,
-  onEndParking,
+  // onEndParking,
+  onOpenConfirmModal,
 }: {
   dataBook: Booking;
-  onEndParking: (id: string) => void;
+  // onEndParking: (id: string) => void;
+  onOpenConfirmModal: (id: string) => void;
 }) => {
   const elapsedTime = new Date().getTime() - dataBook.startTime;
   const durationMs = dataBook?.duration * 60 * 60 * 1000;
@@ -21,9 +23,9 @@ const CardBooking = ({
     <div className="card card-border bg-base-100 shadow-md">
       <div className="card-body ">
         <div className="flex flex-row justify-between py-2 items-center">
-          <h2 className="font-bold text-black text-xl flex items-center ">
-            <SquareParking className="mr-2 size-6 text-green-500" /> Parking No{" "}
-            {dataBook?.spotNumber}
+          <h2 className="font-bold text-black text-sm md:text-md xl:text-xl flex items-center ">
+            <SquareParking className="mr-2 size-6 text-green-500 hidden md:block" />
+            Parking No {dataBook?.spotNumber}
           </h2>
           {isOverTime ? (
             <div className="badge bg-red-500 p-4 text-xs text-white">
@@ -66,7 +68,8 @@ const CardBooking = ({
         <div className="card-actions justify-end">
           <button
             className="btn bg-red-500 text-white w-full"
-            onClick={() => onEndParking(dataBook?.id)}
+            // onClick={() => onEndParking(dataBook?.id)}
+            onClick={() => onOpenConfirmModal(dataBook?.id)}
           >
             End Parking
           </button>
