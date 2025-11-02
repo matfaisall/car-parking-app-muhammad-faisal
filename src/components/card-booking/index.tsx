@@ -1,4 +1,3 @@
-import React from "react";
 import type { Booking } from "../../types";
 import { formatTime } from "../../utils/timeFormat";
 
