@@ -8,6 +8,8 @@ import type {
 } from "../../types";
 import ModalBooking from "../../components/modal-booking";
 import { useDebounce } from "use-debounce";
+import { Bell } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 const STORAGE_KEY = "bookings";
 
@@ -156,13 +158,20 @@ const ParkingPage = () => {
       isActive: true,
     };
 
-    console.log("new Booking", newBooking);
+    // console.log("new Booking", newBooking);
     setBookings([...bookings, newBooking]);
     setParkingSpots((prev) =>
       prev.map((spot) =>
         spot.id === selectedSpot?.id ? { ...spot, isAvailable: true } : spot
       )
     );
+
+    // toast success
+    toast.success("Booking Successfully", {
+      position: "top-right",
+      description: `Parking spot ${newBooking.spotNumber} booked successfully.`,
+      icon: <Bell className="text-green-800 mr-4" />,
+    });
 
     // reset and close modal
     handleCloseModalBooking();
@@ -203,6 +212,8 @@ const ParkingPage = () => {
           </div>
         </div>
       </div>
+
+      <Toaster richColors position="top-right" />
 
       {/* modal for booking */}
       <ModalBooking
