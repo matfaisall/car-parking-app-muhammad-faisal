@@ -30,6 +30,8 @@ yarn dev
 pnpm dev
 ```
 
+OR YOU CAN ACCESS THIS WEBSITE AT [https://car-parking-app-pi.vercel.app/](https://car-parking-app-pi.vercel.app/)
+
 ## Libraries Used in this project
 
 - [Vite](https://vitejs.dev/)
