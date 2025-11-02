@@ -143,9 +143,12 @@ const ParkingPage = () => {
 
     // input data
 
+    // console.log("selectedSpot", selectedSpot);
+
     const newBooking: Booking = {
       id: `booking-${new Date().getTime()}`,
       spotId: selectedSpot?.id,
+      spotNumber: selectedSpot?.spotNumber,
       customerName: formData.customerName,
       vehicleNumber: formData.vehicleNumber,
       duration: formData.duration,

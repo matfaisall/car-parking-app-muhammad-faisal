@@ -24,6 +24,7 @@ export interface FormErrorBooking {
 export interface Booking {
   id: string;
   spotId: string | undefined;
+  spotNumber: string | any;
   customerName: string;
   vehicleNumber: string;
   duration: number | string | any;
