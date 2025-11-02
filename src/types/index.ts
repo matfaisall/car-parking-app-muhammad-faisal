@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ParkingSpot {
   id: string;
   x: number;
@@ -25,7 +26,7 @@ export interface Booking {
   spotId: string | undefined;
   customerName: string;
   vehicleNumber: string;
-  duration: number | string;
+  duration: number | string | any;
   startTime: number;
   isActive: boolean;
 }
