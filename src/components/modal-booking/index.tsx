@@ -1,5 +1,9 @@
-import type { ParkingSpot } from "../../types";
-import type { FormDataBooking } from "../../types";
+import React from "react";
+import type {
+  ParkingSpot,
+  FormDataBooking,
+  FormErrorBooking,
+} from "../../types";
 
 interface ModalBookingProps {
   isOpen: boolean;
@@ -8,6 +12,7 @@ interface ModalBookingProps {
   formData: FormDataBooking;
   setFormData: React.Dispatch<React.SetStateAction<FormDataBooking>>;
   onBook: () => void;
+  error: FormErrorBooking;
 }
 
 const ModalBooking = ({
@@ -17,6 +22,7 @@ const ModalBooking = ({
   formData,
   setFormData,
   onBook,
+  error,
 }: ModalBookingProps) => {
   console.log("selectedSpot xx", selectedSpot);
   return (
@@ -38,6 +44,9 @@ const ModalBooking = ({
                   setFormData({ ...formData, customerName: e.target.value })
                 }
               />
+              {error.customerName && (
+                <p className="text-red-500">{error.customerName}</p>
+              )}
             </div>
             <div className="mb-2">
               <label className="label mb-1">Vihicle Number</label>
@@ -50,6 +59,9 @@ const ModalBooking = ({
                   setFormData({ ...formData, vehicleNumber: e.target.value })
                 }
               />
+              {error.vehicleNumber && (
+                <p className="text-red-500">{error.vehicleNumber}</p>
+              )}
             </div>
             <div className="mb-2">
               <label className="label mb-1">Parking Duration</label>
@@ -65,6 +77,9 @@ const ModalBooking = ({
                   })
                 }
               />
+              {error.duration && (
+                <p className="text-red-500">{error.duration}</p>
+              )}
             </div>
           </fieldset>
 

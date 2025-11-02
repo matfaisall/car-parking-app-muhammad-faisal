@@ -1,7 +1,14 @@
 import React from "react";
 import ParkingSpotsCanvas from "../../components/parking-spots-canvas";
-import type { ParkingSpot, FormDataBooking } from "../../types";
+import type {
+  ParkingSpot,
+  FormDataBooking,
+  FormErrorBooking,
+  Booking,
+} from "../../types";
 import ModalBooking from "../../components/modal-booking";
+
+const STORAGE_KEY = "bookings";
 
 const ParkingPage = () => {
   // untuk search kasih debounce
@@ -18,6 +25,12 @@ const ParkingPage = () => {
     vehicleNumber: "",
     duration: 0, // ini jam
   });
+  const [error, setError] = React.useState<FormErrorBooking>({
+    customerName: "",
+    vehicleNumber: "",
+    duration: "",
+  });
+  const [bookings, setBookings] = React.useState<Booking[]>([]);
 
   // HOOKS
   React.useEffect(() => {
@@ -42,6 +55,39 @@ const ParkingPage = () => {
     setParkingSpots(spots);
   }, []);
 
+  // load localStorage saat pertama kali mount
+  React.useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const loadedBookings: Booking[] = JSON.parse(stored);
+        setBookings(loadedBookings);
+      } catch (error) {
+        console.error("Error parsing bookings from localStorage:", error);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  // update parking spot berdasarkan bookings ..
+  React.useEffect(() => {
+    if (parkingSpots.length > 0 && bookings.length >= 0) {
+      setParkingSpots((prev) =>
+        prev.map((spot) => ({
+          ...spot,
+          isAvailable: bookings.some((b) => b.spotId === spot.id && b.isActive),
+        }))
+      );
+    }
+  }, [bookings, parkingSpots.length]);
+
+  // simpan ke localstorage setiap bookings berubah
+  React.useEffect(() => {
+    if (bookings.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+    }
+  }, [bookings]);
+
   // EVENT HANDLER | FUNCTION HANDLER
   const handleSpotClick = (spot: ParkingSpot) => {
     setOpenModalBooking(true);
@@ -50,10 +96,67 @@ const ParkingPage = () => {
 
   const handleCloseModalBooking = () => {
     setOpenModalBooking(false);
+    // reset semua cuyy
+    setFormData({
+      customerName: "",
+      vehicleNumber: "",
+      duration: 0,
+    });
+    setSelectedSpot(null);
   };
 
+  console.log("selected", selectedSpot);
+
   const hanldeBooking = () => {
-    console.log("hanldeBooking", formData);
+    const newError = {
+      customerName: "",
+      vehicleNumber: "",
+      duration: "",
+    };
+
+    let hasError: boolean = false;
+
+    if (!formData.customerName.trim()) {
+      newError.customerName = "Customer name is required";
+      hasError = true;
+    }
+
+    if (!formData.vehicleNumber.trim()) {
+      newError.vehicleNumber = "Vehicle number is required";
+      hasError = true;
+    }
+
+    if (!formData.duration) {
+      newError.duration = "Duration is required";
+      hasError = true;
+    }
+
+    setError(newError);
+
+    if (hasError) return;
+
+    // input data
+
+    const newBooking: Booking = {
+      id: `booking-${new Date().getTime()}`,
+      spotId: selectedSpot?.id,
+      customerName: formData.customerName,
+      vehicleNumber: formData.vehicleNumber,
+      duration: formData.duration,
+      startTime: Date.now(),
+      isActive: true,
+    };
+
+    console.log("new Booking", newBooking);
+    setBookings([...bookings, newBooking]);
+    setParkingSpots((prev) =>
+      prev.map((spot) =>
+        spot.id === selectedSpot?.id ? { ...spot, isAvailable: true } : spot
+      )
+    );
+
+    // reset and close modal
+    handleCloseModalBooking();
   };
 
   // filtering spots
@@ -95,6 +198,7 @@ const ParkingPage = () => {
         formData={formData}
         setFormData={setFormData}
         onBook={hanldeBooking}
+        error={error}
       />
     </>
   );
