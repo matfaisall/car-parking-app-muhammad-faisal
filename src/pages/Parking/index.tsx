@@ -7,6 +7,7 @@ import type {
   Booking,
 } from "../../types";
 import ModalBooking from "../../components/modal-booking";
+import { useDebounce } from "use-debounce";
 
 const STORAGE_KEY = "bookings";
 
@@ -15,6 +16,7 @@ const ParkingPage = () => {
 
   // STATE
   const [search, setSearch] = React.useState("");
+  const [debounce] = useDebounce(search, 500);
   const [parkingSpots, setParkingSpots] = React.useState<ParkingSpot[]>([]);
   const [selectedSpot, setSelectedSpot] = React.useState<ParkingSpot | null>(
     null
@@ -89,6 +91,10 @@ const ParkingPage = () => {
   }, [bookings]);
 
   // EVENT HANDLER | FUNCTION HANDLER
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
   const handleSpotClick = (spot: ParkingSpot) => {
     setOpenModalBooking(true);
     setSelectedSpot(spot);
@@ -160,10 +166,15 @@ const ParkingPage = () => {
   };
 
   // filtering spots
+  const filteredSpots = React.useMemo(() => {
+    return parkingSpots.filter((spot) =>
+      spot.spotNumber.toLowerCase().includes(debounce.toLowerCase())
+    );
+  }, [debounce, parkingSpots]);
 
-  const filteredSpots = parkingSpots.filter((spot) =>
-    spot.spotNumber.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filteredSpots = parkingSpots.filter((spot) =>
+  //   spot.spotNumber.toLowerCase().includes(search.toLowerCase())
+  // );
 
   // console.log("filterdSposts", filterdSposts);
 
@@ -171,13 +182,13 @@ const ParkingPage = () => {
     <>
       <div className="py-10">
         <div className="w-full max-w-xl  mx-auto">
-          <div className="mb-6">
+          <div className="p-4 mb-2 bg-white rounded-xl">
             <input
               type="text"
               placeholder="Search Parking..."
               value={search}
-              className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => handleOnChange(e)}
             />
           </div>
           <div className="">
