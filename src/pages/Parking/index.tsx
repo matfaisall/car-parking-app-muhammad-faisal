@@ -110,6 +110,11 @@ const ParkingPage = () => {
       vehicleNumber: "",
       duration: 0,
     });
+    setError({
+      customerName: "",
+      vehicleNumber: "",
+      duration: "",
+    });
     setSelectedSpot(null);
   };
 

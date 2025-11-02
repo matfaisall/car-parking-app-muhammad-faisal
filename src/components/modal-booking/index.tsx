@@ -64,7 +64,9 @@ const ModalBooking = ({
               )}
             </div>
             <div className="mb-2">
-              <label className="label mb-1">Parking Duration</label>
+              <label className="label mb-1">
+                Parking Duration <span className="text-red-500">* /hours</span>
+              </label>
               <input
                 type="number"
                 className="input input-md w-full"
